@@ -1,7 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"net/http"
+	"strconv"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -23,15 +26,31 @@ func uploadFile(c *gin.Context) {
 
 // download a file of the provided ID
 func downloadFileById(c *gin.Context) {
+
+	// convert id to integer
+	idString := c.Param("id")
+	id, err := strconv.ParseInt(idString, 10, 64)
+	if err != nil {
+		c.String(http.StatusBadRequest, fmt.Sprintf("id to int error: %s", err.Error()))
+	}
+
 	c.JSON(200, gin.H{
-		"message": "downloaded",
+		"message": fmt.Sprintf("downloaded file of id: %d", id),
 	})
 }
 
 // delete a file of the provided ID
 func deleteFileById(c *gin.Context) {
+
+	// convert id to integer
+	idString := c.Param("id")
+	id, err := strconv.ParseInt(idString, 10, 64)
+	if err != nil {
+		c.String(http.StatusBadRequest, fmt.Sprintf("id to int error: %s", err.Error()))
+	}
+
 	c.JSON(200, gin.H{
-		"message": "deleted",
+		"message": fmt.Sprintf("deleted file of id: %d", id),
 	})
 }
 
