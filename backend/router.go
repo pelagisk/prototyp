@@ -3,12 +3,21 @@ package main
 import (
 	"fmt"
 	"log"
+	"mime/multipart"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/exp/slices"
 )
+
+// binds to POST request JSON
+type BindStruct struct {
+	Description string                `form:"description" binding:"required"`
+	Uploader    string                `form:"uploader" binding:"required"`
+	FileHeader  *multipart.FileHeader `form:"file" binding:"required"`
+}
 
 // get a list of all files
 func getAllFiles(c *gin.Context) {
@@ -19,9 +28,26 @@ func getAllFiles(c *gin.Context) {
 
 // upload a single file
 func uploadFile(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "uploaded",
-	})
+
+	var bindStruct BindStruct
+
+	// bind file
+	if err := c.ShouldBind(&bindStruct); err != nil {
+		c.String(http.StatusBadRequest, fmt.Sprintf("err: %s", err.Error()))
+		return
+	}
+
+	fileHeader := bindStruct.FileHeader
+
+	// check if extension is allowed
+	contentType := fileHeader.Header["Content-Type"][0]
+	allowedContentTypes := []string{"application/pdf", "image/jpeg", "application/xml", "text/xml"}
+	if !slices.Contains(allowedContentTypes, contentType) {
+		c.String(http.StatusInternalServerError, fmt.Sprintf("Content type: %s is not allowed!", contentType))
+		return
+	}
+
+	c.IndentedJSON(http.StatusCreated, bindStruct)
 }
 
 // download a file of the provided ID
