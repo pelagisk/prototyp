@@ -24,7 +24,9 @@ func SetupDatabase(fileName string) *database.SQLiteRepository {
 
 func main() {
 
-	// TODO set up database
+	// set up database
+	dbName := "sqlite.db"
+	fileRepository = SetupDatabase(dbName)
 
 	// set up router
 	router := setupRouter()
