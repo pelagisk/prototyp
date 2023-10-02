@@ -2,10 +2,13 @@ package main
 
 import (
 	"fmt"
+	"gin-backend/database"
 	"log"
 	"mime/multipart"
 	"net/http"
+	"path"
 	"strconv"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -19,11 +22,29 @@ type BindStruct struct {
 	FileHeader  *multipart.FileHeader `form:"file" binding:"required"`
 }
 
+// converts from binding struct to the format of the database
+func bindStructToMetadata(bindStruct BindStruct) database.Metadata {
+	return database.Metadata{
+		Filename:      bindStruct.FileHeader.Filename,
+		Mime:          bindStruct.FileHeader.Header["Content-Type"][0],
+		Description:   bindStruct.Description,
+		Uploader:      bindStruct.Uploader,
+		UnixTimestamp: time.Now().Unix(),
+	}
+}
+
 // get a list of all files
 func getAllFiles(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "all files",
-	})
+	all, err := fileRepository.All()
+	if err != nil {
+		c.String(http.StatusBadRequest, fmt.Sprintf("database error: %s", err.Error()))
+		return
+	}
+	if all == nil {
+		c.IndentedJSON(http.StatusOK, []string{})
+	} else {
+		c.IndentedJSON(http.StatusOK, all)
+	}
 }
 
 // upload a single file
@@ -47,7 +68,22 @@ func uploadFile(c *gin.Context) {
 		return
 	}
 
-	c.IndentedJSON(http.StatusCreated, bindStruct)
+	// save metadata in database
+	metadata := bindStructToMetadata(bindStruct)
+	createdFile, err := fileRepository.Create(metadata)
+	if err != nil {
+		c.String(http.StatusBadRequest, fmt.Sprintf("database error: %s", err.Error()))
+		return
+	}
+
+	// save uploaded file in file store
+	dst := path.Join(fileStorePath, createdFile.Filename)
+	if err := c.SaveUploadedFile(fileHeader, dst); err != nil {
+		c.String(http.StatusBadRequest, fmt.Sprintf("upload file err: %s", err.Error()))
+		return
+	}
+
+	c.IndentedJSON(http.StatusCreated, createdFile)
 }
 
 // download a file of the provided ID
