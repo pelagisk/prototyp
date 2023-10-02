@@ -5,3 +5,4 @@ npm-debug.log*
 /.changelog
 .npm/
 sqlite.db
+sqlite_test.db
