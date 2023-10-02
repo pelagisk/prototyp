@@ -11,6 +11,7 @@ import (
 	"net/http/httptest"
 	"net/textproto"
 	"os"
+	"path"
 	"testing"
 	"time"
 
@@ -121,5 +122,5 @@ func TestApiUpload(t *testing.T) {
 	// tear down test
 
 	os.Remove(dbName)
-	// os.Remove(path.Join(fileStorePath, metadata.Filename))
+	os.Remove(path.Join(fileStorePath, metadata.Filename))
 }
