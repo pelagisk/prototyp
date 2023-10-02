@@ -7,6 +7,8 @@ import (
 	"log"
 )
 
+const fileStorePath = "filestore"
+
 var fileRepository *database.SQLiteRepository
 
 // sets up a database of the provided fileName
