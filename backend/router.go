@@ -97,9 +97,15 @@ func downloadFileById(c *gin.Context) {
 		c.String(http.StatusBadRequest, fmt.Sprintf("id to int error: %s", err.Error()))
 	}
 
-	c.JSON(200, gin.H{
-		"message": fmt.Sprintf("downloaded file of id: %d", id),
-	})
+	// get metadata from database
+	gotFile, err := fileRepository.GetById(id)
+	if err != nil {
+		c.String(http.StatusBadRequest, fmt.Sprintf("database error: %s", err.Error()))
+		return
+	}
+
+	// get file from filestore
+	c.File(path.Join(fileStorePath, gotFile.Filename))
 }
 
 // delete a file of the provided ID
