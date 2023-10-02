@@ -150,10 +150,10 @@ func setupRouter() *gin.Engine {
 	router.MaxMultipartMemory = 8 << 20 // 8 MiB
 
 	// define API routes
-	router.GET("/files", getAllFiles)
-	router.POST("/files", uploadFile)
-	router.GET("/files/:id", downloadFileById)
-	router.DELETE("/files/:id", deleteFileById)
+	router.GET("/v1/files", getAllFiles)
+	router.POST("/v1/files", uploadFile)
+	router.GET("/v1/files/:id", downloadFileById)
+	router.DELETE("/v1/files/:id", deleteFileById)
 
 	return router
 }

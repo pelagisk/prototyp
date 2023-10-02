@@ -48,7 +48,7 @@ func TestApiGet(t *testing.T) {
 	router := setupRouter()
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/files", nil)
+	req, _ := http.NewRequest("GET", "/v1/files", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
@@ -97,7 +97,7 @@ func TestApiUpload(t *testing.T) {
 	writer.Close()
 
 	wPost := httptest.NewRecorder()
-	reqPost, _ := http.NewRequest("POST", "/files", body)
+	reqPost, _ := http.NewRequest("POST", "/v1/files", body)
 	reqPost.Header.Add("Content-Type", writer.FormDataContentType())
 	router.ServeHTTP(wPost, reqPost)
 
@@ -106,7 +106,7 @@ func TestApiUpload(t *testing.T) {
 	// 2. get file list
 
 	wGet := httptest.NewRecorder()
-	reqGet, _ := http.NewRequest("GET", "/files", nil)
+	reqGet, _ := http.NewRequest("GET", "/v1/files", nil)
 	router.ServeHTTP(wGet, reqGet)
 
 	// match JSON with the metadata struct
@@ -124,7 +124,7 @@ func TestApiUpload(t *testing.T) {
 	// 3. delete uploaded file
 
 	wDelete := httptest.NewRecorder()
-	reqDelete, _ := http.NewRequest("DELETE", "/files/1", nil)
+	reqDelete, _ := http.NewRequest("DELETE", "/v1/files/1", nil)
 	router.ServeHTTP(wDelete, reqDelete)
 
 	assert.Equal(t, 200, wDelete.Code)
