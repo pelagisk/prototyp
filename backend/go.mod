@@ -5,6 +5,7 @@ go 1.21.1
 require (
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.9.1
+	github.com/go-playground/assert/v2 v2.2.0
 	github.com/mattn/go-sqlite3 v1.14.17
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9
 )

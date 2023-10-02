@@ -10,7 +10,7 @@ import (
 var fileRepository *database.SQLiteRepository
 
 // sets up a database of the provided fileName
-func SetupDatabase(fileName string) *database.SQLiteRepository {
+func setupDatabase(fileName string) *database.SQLiteRepository {
 	db, err := sql.Open("sqlite3", fileName)
 	if err != nil {
 		log.Fatal(err)
@@ -26,7 +26,7 @@ func main() {
 
 	// set up database
 	dbName := "sqlite.db"
-	fileRepository = SetupDatabase(dbName)
+	fileRepository = setupDatabase(dbName)
 
 	// set up router
 	router := setupRouter()
