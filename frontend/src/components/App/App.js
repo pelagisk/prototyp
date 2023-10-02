@@ -1,9 +1,10 @@
 import './App.css';
+import Table from '../Table/Table'
 
 function App() {
   return (
     <div className="App">
-      <p>Hello world!</p>
+      <Table />
     </div>
   );
 }
