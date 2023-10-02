@@ -5,12 +5,12 @@ function Row({ files, setFiles, index }) {
   console.log(files[index])
   return (
     <tr>
-        <td>{ index }</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>{ files[index].Filetype }</td>
+        <td>{ files[index].Filename }</td>
+        <td>{ files[index].Description }</td>
+        <td>{ files[index].Uploader }</td>
+        <td>{ files[index].UnixTimestamp }</td>
+        <td>Remove file</td>
     </tr>  
   );
 }
