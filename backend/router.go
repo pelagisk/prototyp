@@ -6,6 +6,7 @@ import (
 	"log"
 	"mime/multipart"
 	"net/http"
+	"os"
 	"path"
 	"strconv"
 	"time"
@@ -111,9 +112,23 @@ func deleteFileById(c *gin.Context) {
 		c.String(http.StatusBadRequest, fmt.Sprintf("id to int error: %s", err.Error()))
 	}
 
-	c.JSON(200, gin.H{
-		"message": fmt.Sprintf("deleted file of id: %d", id),
-	})
+	// get metadata from database
+	gotFile, err := fileRepository.GetById(id)
+	if err != nil {
+		c.String(http.StatusBadRequest, fmt.Sprintf("database error: %s", err.Error()))
+		return
+	}
+
+	// delete metadata in database
+	os.Remove(path.Join(fileStorePath, gotFile.Filename))
+
+	// delete metadata from database
+	if err := fileRepository.Delete(id); err != nil {
+		c.String(http.StatusBadRequest, fmt.Sprintf("database error: %s", err.Error()))
+		return
+	}
+
+	c.String(http.StatusOK, fmt.Sprintf("File with id = %d successfully deleted", id))
 }
 
 func setupRouter() *gin.Engine {

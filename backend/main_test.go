@@ -11,7 +11,6 @@ import (
 	"net/http/httptest"
 	"net/textproto"
 	"os"
-	"path"
 	"testing"
 	"time"
 
@@ -67,6 +66,8 @@ func TestApiUpload(t *testing.T) {
 
 	// run test
 
+	// 1. upload file
+
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 
@@ -91,7 +92,6 @@ func TestApiUpload(t *testing.T) {
 	if err != nil {
 		t.Errorf("Failed to create request with error: %s", err)
 	}
-	// part, _ := writer.CreateFormFile("file", filepath.Base(file.Name()))
 	io.Copy(part, file)
 
 	writer.Close()
@@ -102,6 +102,8 @@ func TestApiUpload(t *testing.T) {
 	router.ServeHTTP(wPost, reqPost)
 
 	assert.Equal(t, 201, wPost.Code)
+
+	// 2. get file list
 
 	wGet := httptest.NewRecorder()
 	reqGet, _ := http.NewRequest("GET", "/files", nil)
@@ -119,8 +121,15 @@ func TestApiUpload(t *testing.T) {
 	assert.Equal(t, 200, wGet.Code)
 	assert.Equal(t, "PLC.jpg", metadata.Filename)
 
-	// tear down test
+	// 3. delete uploaded file
 
+	wDelete := httptest.NewRecorder()
+	reqDelete, _ := http.NewRequest("DELETE", "/files/1", nil)
+	router.ServeHTTP(wDelete, reqDelete)
+
+	assert.Equal(t, 200, wDelete.Code)
+	assert.Equal(t, "File with id = 1 successfully deleted", wDelete.Body.String())
+
+	// tear down test
 	os.Remove(dbName)
-	os.Remove(path.Join(fileStorePath, metadata.Filename))
 }
