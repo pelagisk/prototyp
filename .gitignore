@@ -6,4 +6,4 @@ npm-debug.log*
 .npm/
 sqlite.db
 sqlite_test.db
-filestore/*
+backend/filestore/*

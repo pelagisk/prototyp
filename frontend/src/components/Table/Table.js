@@ -1,8 +1,32 @@
+import React from 'react'
+import axios from 'axios'
+import config from '../../config'
 // import './Table.css';
-import Row from '../Row/Row';
+import Row from '../Row/Row'
 
 
 function Table() {
+
+  const [files, setFiles] = React.useState(null);
+
+  React.useEffect(() => {
+    axios.get(config.URL_OF_API + '/files').then((response) => {
+      setFiles(response.data);
+    })
+    .catch((response) => {
+      console.log(response.data)
+    })
+  }, []);
+
+  if (!files) return null
+
+  const tableRows = [...files.keys()].map(
+    index => {
+      return (
+        <Row key={index} files={files} setFiles={setFiles} index={index} />
+      )
+    }
+  )
 
   return (
     <table>    
@@ -17,7 +41,7 @@ function Table() {
         </tr>      
       </thead>
       <tbody>   
-        <Row />
+        { tableRows }
       </tbody>       
     </table>
   );

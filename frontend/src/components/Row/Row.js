@@ -1,10 +1,11 @@
-// import './Row.css';
+// import './Row.css'
 
 
-function Row() {
+function Row({ files, setFiles, index }) {
+  console.log(files[index])
   return (
     <tr>
-        <td></td>
+        <td>{ index }</td>
         <td></td>
         <td></td>
         <td></td>
