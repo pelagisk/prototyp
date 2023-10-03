@@ -38,7 +38,28 @@ function Row({ files, setFiles, index }) {
   }
 
   const invokeDelete = () => {
-    console.log("Implement delete file!")
+    // first delete file from store and db
+    axios.delete(config.URL_OF_API + '/files/' + file.ID)
+    .then((response) => {
+      console.log(response)
+      // then find the file to be deleted
+      const matches = files.reduce((arr, e, i) => {
+        if (e.ID === file.ID) { arr.push(i) }
+        return arr
+      }, [])
+      console.log(matches)
+      // if exactly one match is found, remove it from files and update state
+      if (matches.length === 1) {
+        files.splice(index, 1)
+        setFiles([...files])
+        console.log("Deleted file!")
+      } else {
+        console.log("Error in deleting from prop 'files'. Number of matches found: ", matches.length)
+      }      
+    })
+    .catch((response) => {
+      console.log(response.data)
+    })
   }
 
   return (
