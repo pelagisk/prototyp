@@ -1,5 +1,5 @@
 // import './Row.css'
-
+import ShowDate from '../ShowDate/ShowDate'
 
 function Row({ files, setFiles, index }) {
   const file = files[index]
@@ -9,7 +9,7 @@ function Row({ files, setFiles, index }) {
         <td>{ file.Filename }</td>
         <td>{ file.Description }</td>
         <td>{ file.Uploader }</td>
-        <td>{ file.UnixTimestamp }</td>
+        <td><ShowDate UnixTimestamp={file.UnixTimestamp} /></td>
         <td>Remove file</td>
     </tr>  
   );
