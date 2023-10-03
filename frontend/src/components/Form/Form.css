@@ -11,3 +11,9 @@ textarea {
   font-size: 100%;
   color: #000;
 }
+
+
+p.red {
+  color: #f00;
+  font-style: italic;
+}

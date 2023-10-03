@@ -5,7 +5,10 @@ import './Form.css'
 
 function Form({ toggleUploadView }) {
 
-  // ref to store the form dataw
+  // state to specify if file was rejected during upload
+  const [isRejected, setIsRejected] = React.useState(false)
+
+  // ref to store the form data
   const refForm = React.createRef()
 
   // triggered by onSubmit 
@@ -21,16 +24,33 @@ function Form({ toggleUploadView }) {
       }
     )
     .then((response) => {
+      setIsRejected(false)
       // back to the table view and trigger update of state so that new file list is downloaded!
       toggleUploadView()
     })
     .catch((response) => {
-      console.log(response)
+      console.log("Upload was rejected")
+      setIsRejected(true)      
     })
+  }
+
+  // displays if the file was rejected
+  const displayRejected = () => {
+    if (isRejected === true) {
+      return (
+        <p className="red">The file was rejected! Try again!</p>
+      )
+    } else {
+      return (
+        <p></p>
+      )
+    }
   }
   
   return (
-    <form onSubmit={handleSubmit} ref={refForm}>        
+    <form onSubmit={handleSubmit} ref={refForm}>  
+      { displayRejected() }
+      <br />      
       <input type="file" name="file" placeholder="Filename" />
       <br />
       <input type="text" name="description" placeholder="Description" />
