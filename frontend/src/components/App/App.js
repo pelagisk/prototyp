@@ -21,7 +21,7 @@ function App() {
   } else {
     return (
       <div className="App">      
-        <Form displayForm={displayForm} setDisplayForm={setDisplayForm} />
+        <Form toggleUploadView={toggleUploadView} />
         <button className="button" onClick={toggleUploadView.bind(null)}>Cancel upload (back to File Archive)</button>
       </div>
     )
