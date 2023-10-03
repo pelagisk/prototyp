@@ -2,14 +2,14 @@
 
 
 function Row({ files, setFiles, index }) {
-  console.log(files[index])
+  const file = files[index]
   return (
     <tr>
-        <td>{ files[index].Filetype }</td>
-        <td>{ files[index].Filename }</td>
-        <td>{ files[index].Description }</td>
-        <td>{ files[index].Uploader }</td>
-        <td>{ files[index].UnixTimestamp }</td>
+        <td>{ file.Filetype }</td>
+        <td>{ file.Filename }</td>
+        <td>{ file.Description }</td>
+        <td>{ file.Uploader }</td>
+        <td>{ file.UnixTimestamp }</td>
         <td>Remove file</td>
     </tr>  
   );
