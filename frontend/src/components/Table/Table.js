@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import config from '../../config'
-// import './Table.css';
+import './Table.css';
 import Row from '../Row/Row'
 
 

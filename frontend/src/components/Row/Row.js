@@ -1,6 +1,6 @@
 import axios from 'axios'
 import config from '../../config'
-// import './Row.css'
+import './Row.css'
 import FileIcon from '../FileIcon/FileIcon'
 import UploadDate from '../UploadDate/UploadDate'
 
@@ -63,7 +63,7 @@ function Row({ files, setFiles, index }) {
   }
 
   return (
-    <tr>
+    <tr key={file.ID} className={'row-' + (index % 2)}>
         <td><FileIcon mime={file.Mime} /></td>
         <td><button className="link-button" onClick={() => invokeDownload()}>{file.Filename}</button></td>
         <td>{ file.Description }</td>

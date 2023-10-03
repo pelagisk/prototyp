@@ -1,10 +1,11 @@
 import React from "react"
 import axios from "axios"
 import config from "../../config"
+import './Form.css'
 
 function Form({ toggleUploadView }) {
 
-  // ref to store the form data
+  // ref to store the form dataw
   const refForm = React.createRef()
 
   // triggered by onSubmit 
