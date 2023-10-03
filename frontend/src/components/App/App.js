@@ -8,7 +8,7 @@ function App() {
   const [displayForm, setDisplayForm] = React.useState(false)
 
   const toggleUploadView = () => {
-    setDisplayForm(!displayForm);
+    setDisplayForm(!displayForm)
   }  
 
   if (displayForm === false) {
@@ -26,7 +26,6 @@ function App() {
       </div>
     )
   }
-
 }
 
-export default App;
+export default App

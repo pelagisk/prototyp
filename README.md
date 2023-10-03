@@ -19,6 +19,7 @@ For frontend, run
 
 ```bash
 cd frontend
+npm install
 npm start
 ```
 
@@ -32,6 +33,7 @@ The bonus features:
 - Pagination
 
 Additionally:
+- Refactor FileIcon
 - Containerization (Docker)
 - Test/production mode
 - Frontend testing

@@ -12,16 +12,16 @@ function Row({ files, setFiles, index }) {
   const fileDownloader = (filename) => {
     return (response) => {
         // create file link in browser's memory
-        const href = URL.createObjectURL(response.data);    
+        const href = URL.createObjectURL(response.data)    
         // create "a" HTML element with href to file & click
-        const link = document.createElement('a');
-        link.href = href;
-        link.setAttribute('download', filename); //or any other extension
-        document.body.appendChild(link);
-        link.click();    
+        const link = document.createElement('a')
+        link.href = href
+        link.setAttribute('download', filename) //or any other extension
+        document.body.appendChild(link)
+        link.click()    
         // clean up "a" element & remove ObjectURL
-        document.body.removeChild(link);
-        URL.revokeObjectURL(href);
+        document.body.removeChild(link)
+        URL.revokeObjectURL(href)
     }
   }
 
@@ -34,7 +34,7 @@ function Row({ files, setFiles, index }) {
     .then(fileDownloader(file.Filename))
     .catch((response) => {
       console.log(response.data)
-    });
+    })
   }
 
   const invokeDelete = () => {
@@ -71,7 +71,7 @@ function Row({ files, setFiles, index }) {
         <td><UploadDate unixTimestamp={file.UnixTimestamp} /></td>
         <td><button className="link-button" onClick={() => invokeDelete()}>Delete</button></td>
     </tr>  
-  );
+  )
 }
 
-export default Row;
+export default Row

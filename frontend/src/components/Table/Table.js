@@ -1,24 +1,24 @@
 import React from 'react'
 import axios from 'axios'
 import config from '../../config'
-import './Table.css';
+import './Table.css'
 import Row from '../Row/Row'
 
 
 function Table() {
 
-  const [files, setFiles] = React.useState(null);
+  const [files, setFiles] = React.useState(null)
 
   React.useEffect(() => {
     axios.get(config.URL_OF_API + '/files').then((response) => {
-      setFiles(response.data);
+      setFiles(response.data)
     })
     .catch((response) => {
       console.log(response.data)
     })
-  }, []);
+  }, [])
 
-  if (!files) return null
+  if (!files) return (<p>Could not load files from database!</p>)
 
   const tableRows = [...files.keys()].map(
     index => {
@@ -44,7 +44,7 @@ function Table() {
         { tableRows }
       </tbody>       
     </table>
-  );
+  )
 }
 
-export default Table;
+export default Table

@@ -23,6 +23,6 @@ function FileIcon({ mime }) {
     )
 }
   
-export default FileIcon;
+export default FileIcon
   
 
