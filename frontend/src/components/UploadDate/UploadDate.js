@@ -1,6 +1,6 @@
-function ShowDate({ UnixTimestamp }) {
+function ShowDate({ unixTimestamp }) {
   
-    var date = new Date(UnixTimestamp * 1000);
+    var date = new Date(unixTimestamp * 1000);
     var year = date.getFullYear();
     var month = String(date.getMonth() + 1).padStart(2, '0');
     var day = String(date.getDay() + 1).padStart(2, '0');
