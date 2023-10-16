@@ -20,19 +20,30 @@ import (
 type BindStruct struct {
 	Description string                `form:"description" binding:"required"`
 	Uploader    string                `form:"uploader" binding:"required"`
-	Filename    string                `form:"filename" binding:"required"`
+	Filename    string                `form:"filename"`
 	FileHeader  *multipart.FileHeader `form:"file" binding:"required"`
 }
 
 // converts from binding struct to the format of the database
-func bindStructToMetadata(bindStruct BindStruct) database.Metadata {
+func bindStructToMetadata(filename string, bindStruct BindStruct) database.Metadata {
+
 	return database.Metadata{
-		Filename:      bindStruct.Filename,
+		Filename:      filename,
 		Mime:          bindStruct.FileHeader.Header["Content-Type"][0],
 		Description:   bindStruct.Description,
 		Uploader:      bindStruct.Uploader,
 		UnixTimestamp: time.Now().Unix(),
 	}
+}
+
+func validateFilename(filename string, header *multipart.FileHeader) string {
+	if filename == "" {
+		return header.Filename
+	} else {
+		// TODO validate the filename extension or else add it
+		return "test"
+	}
+
 }
 
 // get a list of all files
@@ -70,11 +81,11 @@ func uploadFile(c *gin.Context) {
 		return
 	}
 
-	// TODO check if the provided filename is correct and matches
-	// TODO check that it is not blank
+	// validate the filename
+	filename := validateFilename(bindStruct.Filename, bindStruct.FileHeader)
 
 	// save metadata in database
-	metadata := bindStructToMetadata(bindStruct)
+	metadata := bindStructToMetadata(filename, bindStruct)
 	createdFile, err := fileRepository.Create(metadata)
 	if err != nil {
 		c.String(http.StatusBadRequest, fmt.Sprintf("database error: %s", err.Error()))

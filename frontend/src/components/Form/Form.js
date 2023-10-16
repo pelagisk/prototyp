@@ -30,6 +30,7 @@ function Form({ toggleUploadView }) {
     })
     .catch((response) => {
       console.log("Upload was rejected")
+      console.log(response)
       setIsRejected(true)      
     })
   }
