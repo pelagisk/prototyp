@@ -53,6 +53,8 @@ function Form({ toggleUploadView }) {
       <br />      
       <input type="file" name="file" placeholder="Filename" />
       <br />
+      <input type="text" name="filename" placeholder="Change filename to (leave blank to keep uploaded filename)" />
+      <br />
       <input type="text" name="description" placeholder="Description" />
       <br />
       <input type="text" name="uploader" placeholder="Uploader" />

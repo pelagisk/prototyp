@@ -20,13 +20,14 @@ import (
 type BindStruct struct {
 	Description string                `form:"description" binding:"required"`
 	Uploader    string                `form:"uploader" binding:"required"`
+	Filename    string                `form:"filename" binding:"required"`
 	FileHeader  *multipart.FileHeader `form:"file" binding:"required"`
 }
 
 // converts from binding struct to the format of the database
 func bindStructToMetadata(bindStruct BindStruct) database.Metadata {
 	return database.Metadata{
-		Filename:      bindStruct.FileHeader.Filename,
+		Filename:      bindStruct.Filename,
 		Mime:          bindStruct.FileHeader.Header["Content-Type"][0],
 		Description:   bindStruct.Description,
 		Uploader:      bindStruct.Uploader,
@@ -68,6 +69,9 @@ func uploadFile(c *gin.Context) {
 		c.String(http.StatusInternalServerError, fmt.Sprintf("Content type: %s is not allowed!", contentType))
 		return
 	}
+
+	// TODO check if the provided filename is correct and matches
+	// TODO check that it is not blank
 
 	// save metadata in database
 	metadata := bindStructToMetadata(bindStruct)

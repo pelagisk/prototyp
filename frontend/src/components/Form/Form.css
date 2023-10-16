@@ -1,6 +1,11 @@
+form {
+  width: 40%;
+}
+
 input {
     display:block;
     border-radius: 0px;
+    width: 100%;
 }
 
 button,
