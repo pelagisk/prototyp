@@ -9,6 +9,7 @@ import (
 	"os"
 	"path"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -36,14 +37,28 @@ func bindStructToMetadata(filename string, bindStruct BindStruct) database.Metad
 	}
 }
 
-func validateFilename(filename string, header *multipart.FileHeader) string {
+func validateFilename(filename string, header *multipart.FileHeader) (string, bool) {
 	if filename == "" {
-		return header.Filename
+		return header.Filename, true
 	} else {
-		// TODO validate the filename extension or else add it
-		return "test"
+		// check that the file has correct suffix or else append it to the name
+		contentType := header.Header["Content-Type"][0]
+		suffixes := map[string]string{
+			"application/pdf": "pdf",
+			"image/jpeg":      "jpg",
+			"application/xml": "xml",
+			"text/xml":        "xml",
+		}
+		suffix, ok := suffixes[contentType]
+		if !ok {
+			return "", false // in this case, the bool error is false
+		}
+		if !strings.HasSuffix(filename, suffix) {
+			return filename + "." + suffix, true
+		} else {
+			return filename, true
+		}
 	}
-
 }
 
 // get a list of all files
@@ -82,7 +97,11 @@ func uploadFile(c *gin.Context) {
 	}
 
 	// validate the filename
-	filename := validateFilename(bindStruct.Filename, bindStruct.FileHeader)
+	filename, ok := validateFilename(bindStruct.Filename, fileHeader)
+	if !ok {
+		c.String(http.StatusBadRequest, fmt.Sprintf("was not able to validate filename: %s and header filename: %s", bindStruct.Filename, fileHeader.Filename))
+		return
+	}
 
 	// save metadata in database
 	metadata := bindStructToMetadata(filename, bindStruct)
