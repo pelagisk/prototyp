@@ -28,7 +28,6 @@ Note that both are running in dev mode. I had to allow CORS to let them communic
 ## Improvements
 
 The bonus features:
-- Renaming file when uploading
 - List sorting
 - Pagination
 
