@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"gin-backend/database"
-	"log"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -174,10 +173,15 @@ func deleteFileById(c *gin.Context) {
 func setupRouter() *gin.Engine {
 	router := gin.Default()
 
-	// only allow CORS in debug mode
 	if gin.DebugMode == "debug" {
-		log.Print("WARNING: running debug mode. Allowing all origin for CORS. Dangerous in production.")
-		router.Use(cors.Default())
+		router.ForwardedByClientIP = true
+		router.SetTrustedProxies([]string{"http://localhost"})
+
+		config := cors.DefaultConfig()
+		config.AllowOrigins = []string{"http://localhost:3000"}
+		router.Use(cors.New(config))
+	} else {
+		// TODO set trusted production proxies and CORS origins
 	}
 
 	// Set a lower memory limit for multipart forms (default is 32 MiB)
