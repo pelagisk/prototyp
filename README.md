@@ -33,7 +33,6 @@ The bonus features:
 - Pagination
 
 Additionally:
-- Refactor FileIcon
 - Containerization (Docker)
 - Test/production mode
 - Frontend testing
