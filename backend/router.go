@@ -65,7 +65,7 @@ func validateFilename(filename string, header *multipart.FileHeader) (string, bo
 func getAllFiles(c *gin.Context) {
 	all, err := fileRepository.All()
 	if err != nil {
-		c.String(http.StatusBadRequest, fmt.Sprintf("database error: %s", err.Error()))
+		c.String(http.StatusInternalServerError, fmt.Sprintf("database error: %s", err.Error()))
 		return
 	}
 	if all == nil {
@@ -92,7 +92,7 @@ func uploadFile(c *gin.Context) {
 	contentType := fileHeader.Header["Content-Type"][0]
 	allowedContentTypes := []string{"application/pdf", "image/jpeg", "application/xml", "text/xml"}
 	if !slices.Contains(allowedContentTypes, contentType) {
-		c.String(http.StatusInternalServerError, fmt.Sprintf("Content type: %s is not allowed!", contentType))
+		c.String(http.StatusBadRequest, fmt.Sprintf("Content type: %s is not allowed!", contentType))
 		return
 	}
 
@@ -107,14 +107,14 @@ func uploadFile(c *gin.Context) {
 	metadata := bindStructToMetadata(filename, bindStruct)
 	createdFile, err := fileRepository.Create(metadata)
 	if err != nil {
-		c.String(http.StatusBadRequest, fmt.Sprintf("database error: %s", err.Error()))
+		c.String(http.StatusInternalServerError, fmt.Sprintf("database error: %s", err.Error()))
 		return
 	}
 
 	// save uploaded file in file store
 	dst := path.Join(fileStorePath, createdFile.Filename)
 	if err := c.SaveUploadedFile(fileHeader, dst); err != nil {
-		c.String(http.StatusBadRequest, fmt.Sprintf("upload file err: %s", err.Error()))
+		c.String(http.StatusInternalServerError, fmt.Sprintf("upload file err: %s", err.Error()))
 		return
 	}
 
@@ -128,13 +128,13 @@ func downloadFileById(c *gin.Context) {
 	idString := c.Param("id")
 	id, err := strconv.ParseInt(idString, 10, 64)
 	if err != nil {
-		c.String(http.StatusBadRequest, fmt.Sprintf("id to int error: %s", err.Error()))
+		c.String(http.StatusInternalServerError, fmt.Sprintf("id to int error: %s", err.Error()))
 	}
 
 	// get metadata from database
 	gotFile, err := fileRepository.GetById(id)
 	if err != nil {
-		c.String(http.StatusBadRequest, fmt.Sprintf("database error: %s", err.Error()))
+		c.String(http.StatusInternalServerError, fmt.Sprintf("database error: %s", err.Error()))
 		return
 	}
 
@@ -149,13 +149,13 @@ func deleteFileById(c *gin.Context) {
 	idString := c.Param("id")
 	id, err := strconv.ParseInt(idString, 10, 64)
 	if err != nil {
-		c.String(http.StatusBadRequest, fmt.Sprintf("id to int error: %s", err.Error()))
+		c.String(http.StatusInternalServerError, fmt.Sprintf("id to int error: %s", err.Error()))
 	}
 
 	// get metadata from database
 	gotFile, err := fileRepository.GetById(id)
 	if err != nil {
-		c.String(http.StatusBadRequest, fmt.Sprintf("database error: %s", err.Error()))
+		c.String(http.StatusInternalServerError, fmt.Sprintf("database error: %s", err.Error()))
 		return
 	}
 
@@ -164,7 +164,7 @@ func deleteFileById(c *gin.Context) {
 
 	// delete metadata from database
 	if err := fileRepository.Delete(id); err != nil {
-		c.String(http.StatusBadRequest, fmt.Sprintf("database error: %s", err.Error()))
+		c.String(http.StatusInternalServerError, fmt.Sprintf("database error: %s", err.Error()))
 		return
 	}
 
